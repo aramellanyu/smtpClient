@@ -21,7 +21,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Send HELO command and print server response.
     heloCommand = 'HELO Alice\r\n'
-    clientSocket.send(heloCommand.encode())
+    clientSocket.helo(heloCommand.encode())
     recv2 = clientSocket.recv(1024).decode()
     #print(recv1)
     if recv2[:3] != '250':
@@ -30,7 +30,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     # Send MAIL FROM command and handle server response.
     # Fill in start
     mailFrom = 'MAIL FROM: <alyssanramella@gmail.com>\r\n'
-    clientSocket.send(mailFrom.encode())
+    clientSocket.MAILFROM(mailFrom.encode())
     recv3 = clientSocket.recv(1024).decode()
     #print(recv1)
     if recv3[:3] != '250':
@@ -40,7 +40,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     # Send RCPT TO command and handle server response.
     # Fill in start
     rcptTo = 'RCPT TO: <anr9962@nyu.edu> \r\n'
-    clientSocket.send(rcptTo.encode())
+    clientSocket.RCPTO(rcptTo.encode())
     recv4 = clientSocket.recv(1024).decode()
     #print("After RCPT TO command: " + recv1)
     if recv4[:3] != '250':
@@ -50,7 +50,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     # Send DATA command and handle server response.
     # Fill in start
     data = 'DATA\r\n.\r\n.'
-    clientSocket.send(data.encode())
+    clientSocket.DATA(data.encode())
     recv5 = clientSocket.recv(1024).decode()
     #print("After DATA command: " + recv1)
     if recv5[:3] != '250':
@@ -59,7 +59,6 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Send message data.
     # Fill in start
-    msg = input("Subject: SMTP mail client testing \r\n\r\n")
     clientSocket.send(msg.encode())
     recv_msg = clientSocket.recv(1024).decode()
     #print("Response after sending message body:" + recv_msg.decode())
@@ -69,8 +68,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Message ends with a single period, send message end and handle server response.
     # Fill in start
-    clientSocket.send('.\r\n\r\n')
-    recv1 = clientSocket.recv(1024)
+    clientSocket.send(endmsg).encode())
     #print(recv1)
     if recv1[:3] != '250':
         print('250 reply not received from server.')
@@ -79,7 +77,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     # Send QUIT command and handle server response.
     # Fill in start
     quitCommand = 'QUIT\r\n'
-    clientSocket.send(quitCommand)
+    clientSocket.QUIT(quitCommand)
     recv1 = clientSocket.recv(1024)
     # print(message)
     if recv1[:3] != '250':
